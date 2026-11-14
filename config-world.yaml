@@ -97,25 +97,28 @@ selection:
     - Ethiopia
     - Egypt
     - Morocco
-  keywords_exclude:
-    # Politics noise
+    # US Politics
     - Donald Trump
     - Trump
     - Democrats
     - Republicans
     - election
+    - White House
+    - Congress
+    - Senate
+    # Nigeria politics
     - Peter Obi
     - Tinubu
     - Atiku
     - INEC
-    - APC
-    - PDP
-    # Energy commodities
+    # Energy / commodities
     - oil
     - gas
     - crude oil
     - OPEC
     - tariff
+    - sanctions
+  keywords_exclude:
     # Sports (keep world and sports separate)
     - Premier League
     - La Liga
