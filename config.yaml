@@ -52,7 +52,7 @@ collector:
   min_article_chars: 600        # shorter text is treated as "summary only"
   fetch_full_text: true
   respect_robots: true
-  lookback_hours: 24            # 24-hour rolling window
+  lookback_hours: 72            # 3-day window; covers MadridXtra's update cadence
 
 selection:
   top_n: 5                      # stories per video
