@@ -20,6 +20,7 @@ from src.tts.text_prep import (group_sentences, int_to_words, number_to_words, p
                                year_to_words)
 from src.video.captions import chunk_timings, split_caption_chunks
 from src.video.export import plan_export, split_segments, video_kbps_for
+from src.video.subtitles import _srt_chunks, _srt_time, build_srt_entries
 from src.utils import load_font
 
 RSS = b"""<?xml version="1.0"?>
@@ -340,6 +341,60 @@ def test_split_segments_balanced_and_greedy_fallback():
     assert groups == [[0, 1], [2, 3]]
     assert split_segments([30, 5], max_len=20) == [[0], [1]]  # a single over-long segment still gets its own part
     assert video_kbps_for(100, 15, 96) > 1000 and video_kbps_for(1000, 15, 96) < 350
+
+
+# ------------------------------------------------------------------ subtitles
+def test_srt_time_formatting():
+    assert _srt_time(0.0) == "00:00:00,000"
+    assert _srt_time(1.5) == "00:00:01,500"
+    assert _srt_time(61.001) == "00:01:01,001"
+    assert _srt_time(3661.999) == "01:01:01,999"
+    assert _srt_time(3600.0) == "01:00:00,000"
+
+
+def test_srt_chunks_respects_sentence_boundary_and_max():
+    text = "First sentence. Second sentence. Third sentence."
+    chunks = _srt_chunks(text, max_chars=84)
+    assert " ".join(chunks) == text  # all words preserved
+    # each chunk fits within max_chars
+    assert all(len(c) <= 84 for c in chunks)
+
+    # a very long single sentence is split at word boundaries
+    long = "word " * 25  # 125 chars
+    chunks = _srt_chunks(long.strip(), max_chars=50)
+    assert all(len(c) <= 50 for c in chunks)
+    assert " ".join(chunks).split() == long.strip().split()
+
+    # sentences that together fit max_chars are merged into one chunk
+    short = "Hi. Ok. Good."
+    merged = _srt_chunks(short, max_chars=84)
+    assert len(merged) == 1 and merged[0] == short
+
+
+def test_build_srt_entries_absolute_timing():
+    segments = [
+        {"kind": "intro", "narration": "Welcome to the news."},
+        {"kind": "story", "narration": "First story. It is very important. Many things happened."},
+        {"kind": "outro", "narration": "Thanks for watching."},
+    ]
+    audio_metas = [
+        {"duration": 2.0, "path": "seg_000.wav"},
+        {"duration": 5.0, "path": "seg_001.wav"},
+        {"duration": 2.0, "path": "seg_002.wav"},
+    ]
+    pad = 0.5
+    entries = build_srt_entries(segments, audio_metas, pad)
+    # all entries have text
+    assert all(text for _, _, text in entries)
+    # entries are in time order
+    assert all(a[1] <= b[0] + 0.001 for a, b in zip(entries, entries[1:]))
+    # first entry starts after the lead (0.1s default)
+    assert entries[0][0] == pytest.approx(0.1, abs=0.01)
+    # intro ends and next segment starts at cursor = 2.0 + 0.5 = 2.5
+    story_entries = [e for e in entries if "story" in e[2].lower() or "First" in e[2]]
+    assert story_entries[0][0] >= 2.5 - 0.001
+    # all absolute end times are positive and increasing
+    assert all(t1 > t0 for t0, t1, _ in entries)
 
 
 # ------------------------------------------------------------------ context geometry

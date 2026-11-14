@@ -44,6 +44,7 @@ def build_parser() -> argparse.ArgumentParser:
     vc.add_argument("--provider")
     vc.add_argument("--locale", help="for example en-NG")
     add("assemble", "stage 6: build the video")
+    add("srt", "write SRT subtitle file for today's video")
     add("review", "write the review file to check before sharing")
     add("export", "stage 7: export WhatsApp-ready MP4 file(s)")
     d = add("download", "stage 8: copy a finished video to your Downloads folder")
@@ -112,6 +113,11 @@ def dispatch(ctx: Ctx, args: argparse.Namespace) -> int:
         from .video.assembler import run_assemble
 
         print(f"Video: {run_assemble(ctx)}")
+    elif cmd == "srt":
+        from .video.subtitles import write_srt
+
+        out = ctx.subdir("output") / f"news_highlights_{ctx.date}.srt"
+        print(f"SRT: {write_srt(ctx, out)}")
     elif cmd == "review":
         from .review import write_review
 
