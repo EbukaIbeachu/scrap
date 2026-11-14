@@ -1,0 +1,421 @@
+# ============================================================
+# NIGERIA NEWS — Politics, economy, security, sports, tech
+# Run: python main.py run-all --config config-nigeria.yaml -v --no-approve-prompt --no-download-prompt
+# ============================================================
+
+general:
+  language: en
+  timezone: Africa/Lagos
+  user_agent: "NewsHighlightsPersonal/1.0 (personal, non-commercial use)"
+  request_delay_seconds: 2.0
+  request_timeout: 20
+  data_dir: data-nigeria
+  max_claude_calls_per_run: 20
+
+claude:
+  model: claude-haiku-5-5
+  max_tokens: 4000
+  temperature: 0.3
+
+# ---- Feeds (tested reachable = enabled: true) --------------------------------
+outlets:
+  - name: Punch
+    rss_url: https://punchng.com/feed/
+    enabled: true
+
+  - name: Premium Times
+    rss_url: https://www.premiumtimesng.com/feed/
+    enabled: true
+
+  - name: BBC Africa
+    rss_url: https://feeds.bbci.co.uk/news/world/africa/rss.xml
+    enabled: true
+
+  - name: BBC Pidgin
+    rss_url: https://feeds.bbci.co.uk/pidgin/rss.xml
+    enabled: true
+
+  # Proxy-blocked outlets — set enabled: true if your network allows them
+  - name: Vanguard
+    rss_url: https://www.vanguardngr.com/feed/
+    enabled: false
+
+  - name: The Cable
+    rss_url: https://www.thecable.ng/feed/
+    enabled: false
+
+  - name: Channels TV
+    rss_url: https://www.channelstv.com/feed/
+    enabled: false
+
+  - name: The Nation
+    rss_url: https://thenationonlineng.net/feed/
+    enabled: false
+
+  - name: Guardian Nigeria
+    rss_url: https://guardian.ng/feed/
+    enabled: false
+
+  - name: ThisDay
+    rss_url: https://www.thisdaylive.com/feed/
+    enabled: false
+
+  - name: Daily Trust
+    rss_url: https://dailytrust.com/feed/
+    enabled: false
+
+  - name: Leadership
+    rss_url: https://leadership.ng/feed/
+    enabled: false
+
+  - name: BusinessDay
+    rss_url: https://businessday.ng/feed/
+    enabled: false
+
+  - name: Nairametrics
+    rss_url: https://nairametrics.com/feed/
+    enabled: false
+
+  - name: Sahara Reporters
+    rss_url: https://saharareporters.com/rss.xml
+    enabled: false
+
+  - name: TechCabal
+    rss_url: https://techcabal.com/feed/
+    enabled: false
+
+  - name: TechPoint Africa
+    rss_url: https://techpoint.africa/feed/
+    enabled: false
+
+news_apis:
+  - provider: gnews
+    enabled: false
+  - provider: newsdata
+    enabled: false
+
+collector:
+  max_stories_per_outlet: 20
+  min_article_chars: 600
+  fetch_full_text: true
+  respect_robots: true
+  lookback_hours: 24
+
+selection:
+  top_n: 5
+  max_per_outlet: 4
+  prefer_full_text: true
+  keywords_exclude: []
+
+  keywords_include:
+    # Country
+    - Nigeria
+    - Nigerian
+    - Nigerians
+    - Abuja
+    - Lagos
+    - FCT
+
+    # ---- Federal government & presidency ----
+    - Tinubu
+    - Bola Tinubu
+    - presidency
+    - Aso Rock
+    - State House
+    - federal government
+    - FG
+    - minister
+    - ministry
+    - cabinet
+    - policy
+    - executive order
+    - inauguration
+
+    # ---- Vice President ----
+    - Shettima
+    - Kashim Shettima
+
+    # ---- Opposition & politics ----
+    - Peter Obi
+    - Atiku
+    - Atiku Abubakar
+    - Labour Party
+    - LP
+    - APC
+    - PDP
+    - NNPP
+    - Kwankwaso
+    - opposition
+    - defection
+    - primary election
+    - governorship
+    - senatorial
+    - House of Representatives
+    - National Assembly
+    - Senate
+    - NASS
+    - lawmaker
+    - bill
+    - legislation
+    - impeachment
+
+    # ---- Electoral / INEC ----
+    - INEC
+    - election
+    - election result
+    - tribunal
+    - Supreme Court
+    - Court of Appeal
+    - electoral
+    - rerun
+    - by-election
+
+    # ---- State governors ----
+    - governor
+    - Fubara                    # Rivers
+    - Wike                      # FCT Minister / Rivers
+    - Sanwo-Olu                 # Lagos
+    - Soludo                    # Anambra
+    - el-Rufai                  # Kaduna
+    - Makinde                   # Oyo
+    - Mbah                      # Enugu
+    - Bago                      # Niger
+    - Alia                      # Benue
+    - Adeleke                   # Osun
+    - Zulum                     # Borno
+    - Buni                      # Yobe
+    - Namadi                    # Jigawa
+    - Dikko Radda               # Katsina
+    - Sule Lamido
+    - state government
+    - local government
+    - LGA
+
+    # ---- Economy & finance ----
+    - naira
+    - exchange rate
+    - forex
+    - CBN
+    - Central Bank of Nigeria
+    - Cardoso
+    - inflation
+    - interest rate
+    - MPC
+    - monetary policy
+    - budget
+    - supplementary budget
+    - subsidy
+    - fuel subsidy
+    - PMS
+    - petrol price
+    - pump price
+    - electricity tariff
+    - electricity supply
+    - power outage
+    - Dangote refinery
+    - refinery
+    - crude oil
+    - oil production
+    - NNPC
+    - NUPRC
+    - FIRS
+    - tax reform
+    - tax bill
+    - VAT
+    - revenue
+    - debt
+    - bond
+    - IMF
+    - World Bank
+    - AfDB
+    - foreign investment
+    - FDI
+    - GDP
+    - recession
+    - economic growth
+    - poverty
+    - unemployment
+    - minimum wage
+    - NLC
+    - TUC
+    - strike
+    - labour
+
+    # ---- Security ----
+    - Boko Haram
+    - ISWAP
+    - bandits
+    - banditry
+    - kidnapping
+    - abduction
+    - ransom
+    - terrorism
+    - insurgency
+    - military operation
+    - troops
+    - army
+    - DHQ
+    - police
+    - NPF
+    - IGP
+    - DSS
+    - EFCC
+    - ICPC
+    - anti-corruption
+    - fraud
+    - arrest
+    - prosecution
+    - conviction
+    - Sambisa
+    - Northeast
+    - Northwest
+    - Southeast
+    - ESN
+    - IPOB
+    - sit-at-home
+    - gunmen
+    - herdsmen
+    - farmer-herder
+    - cult
+    - robbery
+
+    # ---- Infrastructure & society ----
+    - road
+    - highway
+    - bridge
+    - rail
+    - airport
+    - housing
+    - water
+    - healthcare
+    - hospital
+    - NHIS
+    - education
+    - ASUU
+    - university
+    - WAEC
+    - JAMB
+    - NECO
+    - school
+    - flood
+    - disaster
+    - NEMA
+
+    # ---- Oil & gas ----
+    - oil
+    - gas
+    - LNG
+    - NLNG
+    - pipeline
+    - crude
+    - barrel
+    - OPEC
+    - upstream
+    - downstream
+    - midstream
+    - petroleum
+    - kerosene
+
+    # ---- Tech & startups ----
+    - fintech
+    - startup
+    - tech
+    - Flutterwave
+    - Paystack
+    - Interswitch
+    - MTN Nigeria
+    - Airtel Nigeria
+    - Glo
+    - 9mobile
+    - NCC
+    - broadband
+    - 5G
+    - e-naira
+    - crypto
+    - blockchain
+
+    # ---- Sports ----
+    - Super Eagles
+    - AFCON
+    - CAF
+    - NFF
+    - Osimhen
+    - Lookman
+    - Chukwueze
+    - Iheanacho
+    - Ighalo
+    - Troost-Ekong
+    - Super Falcons
+    - Nigeria Olympics
+    - Team Nigeria
+
+    # ---- Diaspora & international ----
+    - Nigerians abroad
+    - diaspora
+    - remittances
+    - deportation
+    - visa
+    - UK Nigeria
+    - US Nigeria
+    - China Nigeria
+    - African Union
+    - ECOWAS
+
+images:
+  image_mode: auto
+  auto_order: [article, stock, cards]
+  images_per_story: 2
+  min_width: 500
+  min_height: 300
+  monetization_safe: false
+
+people:
+  enabled: true
+  max_per_story: 2
+  require_approval: false
+  auto_use_min_confidence: 0.85
+  manual_photos_dir: people_photos
+  wikipedia_lang: en
+  search_api:
+    enabled: false
+
+script:
+  words_per_story: 90
+  intro_words: 30
+  outro_words: 25
+  tone: "authoritative, clear-voiced Nigerian news presenter"
+
+tts:
+  providers: [edge-tts]
+  speed: 1.0
+  pitch_hz: 0
+  sentence_pause_ms: 280
+  edge_tts:
+    voice: en-NG-AbeoNeural        # Nigerian male voice
+
+video:
+  aspect: landscape
+  height: 720
+  fps: 25
+  image_transition_seconds: 0.6
+  segment_pad_seconds: 0.5
+  zoom_amount: 0.12
+  crf: 20
+  preset: veryfast
+  brand:
+    name: Nigeria Daily
+    primary_color: "#008751"       # Nigeria green
+    accent_color: "#FFFFFF"
+    text_color: "#FFFFFF"
+    intro_title: "Nigeria Daily"
+    outro_text: "Stay Informed"
+
+export:
+  target_mb: 15.0
+  audio_kbps: 96
+  min_video_kbps: 350
+  max_video_kbps: 2500
+  preset: medium
+
+download:
+  download_dir: ""
