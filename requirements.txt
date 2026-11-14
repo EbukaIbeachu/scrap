@@ -1,0 +1,18 @@
+# Core (required)
+requests>=2.31
+beautifulsoup4>=4.12
+Pillow>=10.1
+PyYAML>=6.0
+python-dotenv>=1.0
+edge-tts>=6.1          # free natural voices (online)
+tzdata>=2024.1         # time zones on Windows
+
+# Tests
+pytest>=8.0
+
+# Optional extras (install only if you want them)
+# trafilatura>=1.8     # better article text extraction (a built-in fallback is used otherwise)
+# kokoro>=0.9          # offline natural voice (also: pip install soundfile)
+# soundfile
+# piper-tts            # offline light voice (also download a .onnx voice model)
+# TTS                  # Coqui XTTS, to speak in your own cloned voice (also needs torch; large download)

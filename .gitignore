@@ -1,0 +1,15 @@
+# Secrets
+.env
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Data & outputs (personal content, never commit)
+# everything under data/ is personal or generated: the scraped news.db, article images,
+# voice samples, generated audio/output, and the ~1.9 GB XTTS model in data/models/
+data/
+logs/

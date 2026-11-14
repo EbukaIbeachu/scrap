@@ -1,0 +1,254 @@
+# Sports highlights (Real Madrid FC / La Liga / English Premiership / Serie A).
+# Used like this:  python main.py run-all --config config.sports.yaml
+# The news settings in config.yaml are left untouched.
+
+general:
+  language: en
+  timezone: Africa/Lagos
+  user_agent: "NewsHighlightsPersonal/1.0 (personal, non-commercial use; contact: you@example.com)"
+  request_delay_seconds: 2.0
+  request_timeout: 25
+  data_dir: data
+  max_claude_calls_per_run: 20
+
+claude:
+  model: claude-3-5-haiku-latest
+  max_tokens: 4000
+  temperature: 0.3
+
+# ---- Football feeds --------------------------------------------------------------------------
+# Checked live on 2026-11-13. Open one in a browser if a section comes back empty.
+outlets:
+  - name: BBC Sport Football
+    rss_url: https://feeds.bbci.co.uk/sport/football/rss.xml
+    enabled: true
+  - name: The Guardian Football
+    rss_url: https://www.theguardian.com/football/rss
+    enabled: true
+  - name: Sky Sports Football
+    rss_url: https://www.skysports.com/rss/11095
+    enabled: true
+  - name: Marca (English)
+    rss_url: https://e00-marca.uecdn.es/rss/en/football.xml
+    enabled: true
+  - name: Football Espana
+    rss_url: https://www.football-espana.net/feed
+    enabled: true
+  - name: Football Italia
+    rss_url: https://www.football-italia.net/feed
+    enabled: true
+
+news_apis: []
+
+collector:
+  max_stories_per_outlet: 10
+  min_article_chars: 600
+  fetch_full_text: true
+  respect_robots: true
+  lookback_hours: 72
+
+selection:
+  top_n: 4
+  max_per_outlet: 5
+  keywords_include: []
+  keywords_exclude: []
+  prefer_full_text: true
+
+# ---- Named sections --------------------------------------------------------------------------
+# A story goes to the FIRST rule whose keyword appears in its title or summary, so
+# "Real Madrid FC" must stay above "La Liga" (Real Madrid is a La Liga club).
+# `limit` is how many stories that section contributes; `intro` is the spoken line that
+# opens the section (omit it to use header_template).
+sections:
+  enabled: true
+  header_template: "Now to {name}."
+  rules:
+    - name: Real Madrid FC
+      limit: 1
+      intro: "First, Real Madrid."
+      keywords:
+        - Real Madrid
+        - Los Blancos
+        - Los Merengues
+        - Santiago Bernabeu
+        - Bernabeu
+        - Mbappe
+        - Vinicius
+        - Bellingham
+        - Florentino Perez
+        - Ancelotti
+        - Xabi Alonso
+        - Courtois
+    - name: La Liga
+      limit: 1
+      keywords:
+        - La Liga
+        - LaLiga
+        - Barcelona
+        - Barca
+        - Atletico Madrid
+        - Atletico
+        - Sevilla
+        - Villarreal
+        - Real Betis
+        - Betis
+        - Athletic Club
+        - Athletic Bilbao
+        - Girona
+        - Valencia
+        - Celta Vigo
+        - Osasuna
+        - Mallorca
+        - Getafe
+        - Espanyol
+        - Rayo Vallecano
+        - Real Sociedad
+        - Alaves
+        - Elche
+        - Levante
+        - Real Oviedo
+        - Las Palmas
+        - Copa del Rey
+        - Camp Nou
+        - Lamine Yamal
+        - Pedri
+        - Lewandowski
+        - El Clasico
+    - name: English Premiership
+      limit: 1
+      keywords:
+        - Premier League
+        - Premiership
+        - Arsenal
+        - Liverpool
+        - Manchester United
+        - Man Utd
+        - Man United
+        - Manchester City
+        - Man City
+        - Chelsea
+        - Tottenham
+        - Spurs
+        - Newcastle
+        - Aston Villa
+        - Everton
+        - West Ham
+        - Brighton
+        - Crystal Palace
+        - Nottingham Forest
+        - Fulham
+        - Brentford
+        - Wolves
+        - Bournemouth
+        - Sunderland
+        - Leeds
+        - Burnley
+        - Anfield
+        - Old Trafford
+        - Etihad
+        - Emirates Stadium
+        - FA Cup
+        - Carabao Cup
+        - EFL
+    - name: Serie A
+      limit: 1
+      keywords:
+        - Serie A
+        - Scudetto
+        - Coppa Italia
+        - San Siro
+        - Inter Milan
+        - Nerazzurri
+        - AC Milan
+        - Juventus
+        - Bianconeri
+        - Napoli
+        - Roma
+        - Lazio
+        - Atalanta
+        - Fiorentina
+        - Bologna
+        - Torino
+        - Udinese
+        - Genoa
+        - Cagliari
+        - Verona
+        - Como
+        - Parma
+        - Lecce
+        - Sassuolo
+
+images:
+  image_mode: auto
+  auto_order: [article, stock, cards]
+  images_per_story: 2
+  min_width: 500
+  min_height: 300
+  monetization_safe: false       # personal use: article photos are fine, and credits are burned in
+  pexels_api_key_env: PEXELS_API_KEY
+  pixabay_api_key_env: PIXABAY_API_KEY
+  ai_provider: ""
+
+people:
+  enabled: true
+  max_per_story: 2
+  require_approval: true         # players and managers are public figures, but you still approve each photo
+  auto_use_min_confidence: 0.85
+  manual_photos_dir: people_photos
+  manual_commercial_ok: false
+  wikipedia_lang: en
+  search_api:
+    enabled: false
+    key_env: GOOGLE_CSE_KEY
+    cx_env: GOOGLE_CSE_CX
+
+script:
+  words_per_story: 90
+  intro_words: 30
+  outro_words: 25
+  tone: "neutral, clear, conversational sports news-reader"
+
+# ---- Voice: your own clone -------------------------------------------------------------------
+tts:
+  providers: [own_voice]
+  speed: 1.0
+  pitch_hz: 0
+  sentence_pause_ms: 280
+  edge_tts:
+    voice: en-NG-AbeoNeural
+  own_voice:
+    sample_dir: voice_samples
+    language: en
+    model_dir: models/xtts_v2
+  pronunciations: {}             # e.g. {"Mbappe": "Em-bap-pay"}
+
+video:
+  aspect: landscape
+  height: 720
+  fps: 25
+  image_transition_seconds: 0.6
+  segment_pad_seconds: 0.5
+  zoom_amount: 0.12
+  crf: 20
+  preset: veryfast
+  music_dir: music
+  music_volume: 0.07
+  brand:
+    name: Sports
+    primary_color: "#0B1F3B"
+    accent_color: "#00C46A"
+    text_color: "#FFFFFF"
+    font_path: ""
+    logo_path: ""
+    intro_title: "Today's Sports Highlights"
+    outro_text: "That's your sports round-up"
+
+export:
+  target_mb: 15.0
+  audio_kbps: 96
+  min_video_kbps: 350
+  max_video_kbps: 2500
+  preset: medium
+
+download:
+  download_dir: ""
