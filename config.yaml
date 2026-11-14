@@ -19,6 +19,9 @@ claude:
 # RSS addresses change now and then: open each one in your browser to check it still works.
 # Some outlets only publish headlines + a snippet in RSS; those stories are marked "summary_only".
 outlets:
+  - name: MadridXtra
+    rss_url: https://madridxtra.com/rss.xml
+    enabled: true
   - name: BBC Sport Real Madrid
     rss_url: https://feeds.bbci.co.uk/sport/football/teams/real-madrid/rss.xml
     enabled: true
@@ -49,7 +52,7 @@ collector:
   min_article_chars: 600        # shorter text is treated as "summary only"
   fetch_full_text: true
   respect_robots: true
-  lookback_hours: 336           # two week window for Real Madrid news
+  lookback_hours: 24            # 24-hour rolling window
 
 selection:
   top_n: 5                      # stories per video
