@@ -1,0 +1,187 @@
+# ============================================================
+# WORLD NEWS — International headlines, no politics/energy noise
+# Run: python main.py run-all --config config-world.yaml -v --no-approve-prompt --no-download-prompt
+# ============================================================
+
+general:
+  language: en
+  timezone: Africa/Lagos
+  user_agent: "NewsHighlightsPersonal/1.0 (personal, non-commercial use)"
+  request_delay_seconds: 2.0
+  request_timeout: 20
+  data_dir: data-world              # separate folder from sports news
+  max_claude_calls_per_run: 20
+
+claude:
+  model: claude-haiku-5-5
+  max_tokens: 4000
+  temperature: 0.3
+
+outlets:
+  - name: BBC News World
+    rss_url: https://feeds.bbci.co.uk/news/world/rss.xml
+    enabled: true
+  - name: BBC News Technology
+    rss_url: https://feeds.bbci.co.uk/news/technology/rss.xml
+    enabled: true
+  - name: BBC News Science
+    rss_url: https://feeds.bbci.co.uk/news/science_and_environment/rss.xml
+    enabled: true
+  - name: BBC News Business
+    rss_url: https://feeds.bbci.co.uk/news/business/rss.xml
+    enabled: true
+  - name: BBC News Health
+    rss_url: https://feeds.bbci.co.uk/news/health/rss.xml
+    enabled: true
+
+news_apis:
+  - provider: gnews
+    enabled: false
+  - provider: newsdata
+    enabled: false
+
+collector:
+  max_stories_per_outlet: 15
+  min_article_chars: 600
+  fetch_full_text: true
+  respect_robots: true
+  lookback_hours: 24               # world news updates every few hours
+
+selection:
+  top_n: 5
+  max_per_outlet: 3
+  keywords_include:
+    # International affairs
+    - world
+    - international
+    - global
+    - United Nations
+    - UN
+    - NATO
+    - G7
+    - G20
+    - summit
+    - treaty
+    - diplomatic
+    # Technology
+    - AI
+    - artificial intelligence
+    - technology
+    - cybersecurity
+    - space
+    - NASA
+    - SpaceX
+    - climate
+    - energy
+    # Business / Economy
+    - economy
+    - inflation
+    - interest rate
+    - central bank
+    - IMF
+    - World Bank
+    - trade
+    - investment
+    # Health
+    - health
+    - disease
+    - pandemic
+    - vaccine
+    - WHO
+    # Africa / Nigeria focus
+    - Africa
+    - Nigeria
+    - Ghana
+    - Kenya
+    - South Africa
+    - Ethiopia
+    - Egypt
+    - Morocco
+    # US Politics
+    - Donald Trump
+    - Trump
+    - Democrats
+    - Republicans
+    - election
+    - White House
+    - Congress
+    - Senate
+    # Nigeria politics
+    - Peter Obi
+    - Tinubu
+    - Atiku
+    - INEC
+    # Energy / commodities
+    - oil
+    - gas
+    - crude oil
+    - OPEC
+    - tariff
+    - sanctions
+  keywords_exclude:
+    # Sports (keep world and sports separate)
+    - Premier League
+    - La Liga
+    - Champions League
+    - Real Madrid
+    - transfer window
+  prefer_full_text: true
+
+images:
+  image_mode: auto
+  auto_order: [article, stock, cards]
+  images_per_story: 2
+  min_width: 500
+  min_height: 300
+  monetization_safe: false
+
+people:
+  enabled: true
+  max_per_story: 2
+  require_approval: false
+  auto_use_min_confidence: 0.85
+  manual_photos_dir: people_photos
+  wikipedia_lang: en
+  search_api:
+    enabled: false
+
+script:
+  words_per_story: 90
+  intro_words: 30
+  outro_words: 25
+  tone: "calm, authoritative international news presenter"
+
+tts:
+  providers: [edge-tts]
+  speed: 1.0
+  pitch_hz: 0
+  sentence_pause_ms: 280
+  edge_tts:
+    voice: en-GB-RyanNeural        # male British
+
+video:
+  aspect: landscape
+  height: 720
+  fps: 25
+  image_transition_seconds: 0.6
+  segment_pad_seconds: 0.5
+  zoom_amount: 0.12
+  crf: 20
+  preset: veryfast
+  brand:
+    name: World News Daily
+    primary_color: "#1A1A2E"
+    accent_color: "#E94560"
+    text_color: "#FFFFFF"
+    intro_title: "World News Daily"
+    outro_text: "Stay Informed"
+
+export:
+  target_mb: 15.0
+  audio_kbps: 96
+  min_video_kbps: 350
+  max_video_kbps: 2500
+  preset: medium
+
+download:
+  download_dir: ""

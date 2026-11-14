@@ -85,7 +85,7 @@ def build_segment(ctx: Ctx, index: int, seg: dict, images: list[Path], credits: 
     total = speech + pad
     n = len(images)
     tr = min(float(ctx.get("video.image_transition_seconds", 0.6)), total / (2 * n)) if n > 1 else 0.0
-    per = (total + (n - 1) * tr) / n
+    per = (total + (n - 1) * tr) / n if n else total
     frames = max(int(math.ceil(per * fps)), 2)
     dz = float(ctx.get("video.zoom_amount", 0.12))
 

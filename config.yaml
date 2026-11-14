@@ -3,7 +3,7 @@
 
 general:
   language: en                  # language of the script and the voice (en, fr, ha, yo, ig ...)
-  timezone: Africa/Lagos        # decides what "today" means
+  timezone: Europe/Madrid       # Real Madrid timezone
   user_agent: "NewsHighlightsPersonal/1.0 (personal, non-commercial use; contact: you@example.com)"
   request_delay_seconds: 2.0    # pause between web requests (be polite to the outlets)
   request_timeout: 20
@@ -11,7 +11,7 @@ general:
   max_claude_calls_per_run: 20  # safety cap on paid AI calls per run
 
 claude:
-  model: claude-3-5-haiku-latest  # cheap and fast; switch to a bigger model for better scripts
+  model: claude-haiku-5-5  # cheap and fast; switch to a bigger model for better scripts
   max_tokens: 4000
   temperature: 0.3
 
@@ -19,20 +19,23 @@ claude:
 # RSS addresses change now and then: open each one in your browser to check it still works.
 # Some outlets only publish headlines + a snippet in RSS; those stories are marked "summary_only".
 outlets:
-  - name: BBC News Africa
-    rss_url: https://feeds.bbci.co.uk/news/world/africa/rss.xml
+  - name: MadridXtra
+    rss_url: https://madridxtra.com/rss.xml
     enabled: true
-  - name: Punch
-    rss_url: https://punchng.com/feed/
+  - name: BBC Sport Real Madrid
+    rss_url: https://feeds.bbci.co.uk/sport/football/teams/real-madrid/rss.xml
     enabled: true
-  - name: Premium Times
-    rss_url: https://www.premiumtimesng.com/feed
+  - name: BBC Sport Football
+    rss_url: https://feeds.bbci.co.uk/sport/football/rss.xml
     enabled: true
-  - name: Vanguard
-    rss_url: https://www.vanguardngr.com/feed/
+  - name: Marca English
+    rss_url: https://www.marca.com/en/rss/football/real-madrid.xml
     enabled: false
-  - name: Channels TV
-    rss_url: https://www.channelstv.com/feed/
+  - name: AS English
+    rss_url: https://en.as.com/rss/tags/real_madrid_en.xml
+    enabled: false
+  - name: Sky Sports Football
+    rss_url: https://www.skysports.com/rss/12040
     enabled: false
 
 # Optional: headline APIs (need a free key in .env). Set enabled: true to use one.
@@ -45,16 +48,16 @@ news_apis:
     params: {country: ng, language: en}
 
 collector:
-  max_stories_per_outlet: 5
+  max_stories_per_outlet: 20
   min_article_chars: 600        # shorter text is treated as "summary only"
   fetch_full_text: true
   respect_robots: true
-  lookback_hours: 48            # only stories from the last N hours are considered
+  lookback_hours: 72            # 3-day window; covers MadridXtra's update cadence
 
 selection:
   top_n: 5                      # stories per video
-  max_per_outlet: 2
-  keywords_include: []          # e.g. [Lagos, economy]  (empty = everything)
+  max_per_outlet: 5
+  keywords_include: [Real Madrid, Madridista, Bernabeu, Vinicius, Mbappe, Bellingham, Ancelotti, La Liga, Clasico, Los Blancos, Valverde, Modric, Carvajal, Militao, Rodrygo, Camavinga, Tchouameni, Alaba]
   keywords_exclude: []          # e.g. [celebrity, gossip]
   prefer_full_text: true
 
@@ -89,16 +92,16 @@ script:
   words_per_story: 90           # about 35-45 seconds spoken
   intro_words: 30
   outro_words: 25
-  tone: "neutral, clear, conversational news-reader"
+  tone: "authoritative, passionate, football-focused news reporter"
 
 # ---- Voice ------------------------------------------------------------------------------------
 tts:
-  providers: [own_voice]        # tried in this order; the first that works is used
+  providers: [edge-tts]         # tried in this order; the first that works is used
   speed: 1.0                    # 0.9 = slower, 1.1 = faster
   pitch_hz: 0                   # edge-tts only, e.g. -10 for deeper
   sentence_pause_ms: 280
   edge_tts:
-    voice: en-NG-EzinneNeural   # female Nigerian English; en-NG-AbeoNeural = male
+    voice: en-GB-RyanNeural     # male British English; en-US-GuyNeural = US male
   kokoro:
     voice: af_heart
     lang_code: a
@@ -130,14 +133,14 @@ video:
   music_dir: music              # optional: drop an mp3 you have the rights to in data/music/
   music_volume: 0.07
   brand:
-    name: News Highlights
-    primary_color: "#0B3D91"
-    accent_color: "#F2A900"
+    name: Real Madrid Daily
+    primary_color: "#003DA5"
+    accent_color: "#FEBE10"
     text_color: "#FFFFFF"
     font_path: ""               # e.g. C:/Windows/Fonts/arialbd.ttf (empty = automatic)
     logo_path: ""               # a PNG with transparency (optional)
-    intro_title: "Today's News Highlights"
-    outro_text: "Thanks for watching"
+    intro_title: "Real Madrid Daily"
+    outro_text: "Hala Madrid"
 
 export:
   target_mb: 15.0               # WhatsApp's video limit is about 16 MB

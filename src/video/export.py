@@ -9,6 +9,7 @@ from ..context import Ctx
 from ..review import write_review
 from ..utils import digest, file_mb, log, media_duration, run_ffmpeg
 from .assembler import load_master
+from .subtitles import write_srt
 
 COPYRIGHT_WARNING = (
     "NOTE: News photos and text are usually protected by copyright. Only share this video "
@@ -120,10 +121,13 @@ def run_export(ctx: Ctx) -> dict:
         size = encode_part(ctx, master, out, start, part["duration"], part["video_kbps"])
         files.append({"path": str(out), "duration": media_duration(out), "size_mb": round(size, 2)})
 
+    srt_name = f"news_highlights_{ctx.date}.srt"
+    srt_path = write_srt(ctx, out_dir / srt_name)
+
     manifest = {
         "date": ctx.date, "key": key, "files": files, "n_parts": n,
         "n_stories": sum(1 for s in meta["segments"] if s["kind"] == "story"),
-        "review": str(review), "total_duration": meta["duration"],
+        "review": str(review), "srt": str(srt_path), "total_duration": meta["duration"],
     }
     manifest_path.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
     print(COPYRIGHT_WARNING)

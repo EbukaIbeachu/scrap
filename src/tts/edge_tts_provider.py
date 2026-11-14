@@ -7,6 +7,7 @@ en-NG-EzinneNeural (female) and en-NG-AbeoNeural (male).
 from __future__ import annotations
 
 import asyncio
+import os
 import time
 from pathlib import Path
 
@@ -32,9 +33,10 @@ class EdgeTTS(TTSProvider):
         rate = f"{round((self.speed - 1) * 100):+d}%"
         pitch = f"{self.pitch_hz:+d}Hz"
         out_path = out_path.with_suffix(".mp3")
+        proxy = os.getenv("HTTPS_PROXY") or os.getenv("https_proxy") or None
 
         async def go() -> None:
-            await edge_tts.Communicate(text, voice, rate=rate, pitch=pitch).save(str(out_path))
+            await edge_tts.Communicate(text, voice, rate=rate, pitch=pitch, proxy=proxy).save(str(out_path))
 
         last: Exception | None = None
         for attempt in range(3):  # transient network errors are common

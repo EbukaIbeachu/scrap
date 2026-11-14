@@ -37,10 +37,12 @@ class EdgeTTS(TTSProvider):
     def synthesize(self, text: str, out_path: Path, cfg: Config) -> Path | None:
         """Synthesize ``text`` to an MP3 file using the configured voice."""
         import edge_tts
+        import os
 
         out_path = out_path.with_suffix(".mp3")
         out_path.parent.mkdir(parents=True, exist_ok=True)
         voice = cfg.voice.voice or DEFAULT_VOICE
+        proxy = os.getenv("HTTPS_PROXY") or os.getenv("https_proxy") or None
 
         async def _save() -> None:
             communicate = edge_tts.Communicate(
@@ -49,6 +51,7 @@ class EdgeTTS(TTSProvider):
                 rate=cfg.voice.rate or "+0%",
                 pitch=cfg.voice.pitch or "+0Hz",
                 volume=cfg.voice.volume or "+0%",
+                proxy=proxy,
             )
             await communicate.save(str(out_path))
 

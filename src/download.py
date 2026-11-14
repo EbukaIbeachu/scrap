@@ -25,12 +25,14 @@ def print_summary(manifest: dict) -> None:
     for f in files:
         print(f"  {Path(f['path']).name}   {f['duration']:.0f}s   {f['size_mb']:.1f} MB")
     print(f"  Stories: {manifest['n_stories']}   Parts: {manifest['n_parts']}")
+    if manifest.get("srt"):
+        print(f"  Subtitles: {manifest['srt']}")
     print(f"  Review file: {manifest['review']}")
     print("=" * 60)
 
 
 def copy_to_downloads(ctx: Ctx, manifest: dict, stamp: str | None = None) -> list[Path]:
-    """Copy the video file(s) to the download folder with a timestamped name. Never overwrites."""
+    """Copy the video file(s) and SRT to the download folder. Never overwrites."""
     dest_dir = downloads_dir(ctx.get("download.download_dir", ""))
     stamp = stamp or now_local(ctx.get("general.timezone")).strftime("%Y-%m-%d_%H%M")
     copied: list[Path] = []
@@ -43,6 +45,15 @@ def copy_to_downloads(ctx: Ctx, manifest: dict, stamp: str | None = None) -> lis
             n += 1
         shutil.copy2(f["path"], target)
         copied.append(target)
+    srt_src = manifest.get("srt")
+    if srt_src and Path(srt_src).exists():
+        srt_target = dest_dir / f"news_highlights_{stamp}.srt"
+        n = 2
+        while srt_target.exists():
+            srt_target = dest_dir / f"news_highlights_{stamp}_{n}.srt"
+            n += 1
+        shutil.copy2(srt_src, srt_target)
+        copied.append(srt_target)
     return copied
 
 

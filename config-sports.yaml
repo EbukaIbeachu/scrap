@@ -1,0 +1,176 @@
+# ============================================================
+# SPORTS NEWS — Real Madrid, La Liga, EPL, Transfers
+# Run: python main.py run-all --config config-sports.yaml -v --no-approve-prompt --no-download-prompt
+# ============================================================
+
+general:
+  language: en
+  timezone: Europe/Madrid
+  user_agent: "NewsHighlightsPersonal/1.0 (personal, non-commercial use)"
+  request_delay_seconds: 2.0
+  request_timeout: 20
+  data_dir: data-sports              # separate folder from world news
+  max_claude_calls_per_run: 20
+
+claude:
+  model: claude-haiku-5-5
+  max_tokens: 4000
+  temperature: 0.3
+
+outlets:
+  - name: MadridXtra
+    rss_url: https://madridxtra.com/rss.xml
+    enabled: true
+  - name: BBC Sport Real Madrid
+    rss_url: https://feeds.bbci.co.uk/sport/football/teams/real-madrid/rss.xml
+    enabled: true
+  - name: BBC Sport Football
+    rss_url: https://feeds.bbci.co.uk/sport/football/rss.xml
+    enabled: true
+  - name: Marca English
+    rss_url: https://www.marca.com/en/rss/football/real-madrid.xml
+    enabled: false
+  - name: AS English
+    rss_url: https://en.as.com/rss/tags/real_madrid_en.xml
+    enabled: false
+  - name: Sky Sports Football
+    rss_url: https://www.skysports.com/rss/12040
+    enabled: false
+
+news_apis:
+  - provider: gnews
+    enabled: false
+  - provider: newsdata
+    enabled: false
+
+collector:
+  max_stories_per_outlet: 20
+  min_article_chars: 600
+  fetch_full_text: true
+  respect_robots: true
+  lookback_hours: 72
+
+selection:
+  top_n: 5
+  max_per_outlet: 5
+  keywords_include:
+    # Real Madrid
+    - Real Madrid
+    - Madridista
+    - Bernabeu
+    - Los Blancos
+    - Hala Madrid
+    - Ancelotti
+    - Vinicius
+    - Mbappe
+    - Bellingham
+    - Valverde
+    - Modric
+    - Carvajal
+    - Militao
+    - Rodrygo
+    - Camavinga
+    - Tchouameni
+    - Alaba
+    - Endrick
+    # La Liga
+    - La Liga
+    - Clasico
+    - El Clasico
+    - Barcelona
+    - Atletico Madrid
+    - Sevilla
+    # EPL
+    - Premier League
+    - EPL
+    - Arsenal
+    - Manchester City
+    - Manchester United
+    - Liverpool
+    - Chelsea
+    - Tottenham
+    # Football general
+    - Champions League
+    - UEFA
+    - transfer
+    - transfer window
+    - pre-match
+    - match preview
+    - injury
+    - squad news
+    - signing
+    - loan
+    - contract
+  keywords_exclude:
+    - oil
+    - gas
+    - tariff
+    - Donald Trump
+    - Trump
+    - Democrats
+    - Republicans
+    - election
+    - Peter Obi
+    - Tinubu
+    - Atiku
+    - politics
+  prefer_full_text: true
+
+images:
+  image_mode: auto
+  auto_order: [article, stock, cards]
+  images_per_story: 2
+  min_width: 500
+  min_height: 300
+  monetization_safe: false
+
+people:
+  enabled: true
+  max_per_story: 2
+  require_approval: false
+  auto_use_min_confidence: 0.85
+  manual_photos_dir: people_photos
+  wikipedia_lang: en
+  search_api:
+    enabled: false
+
+script:
+  words_per_story: 90
+  intro_words: 30
+  outro_words: 25
+  tone: "authoritative, passionate, football-focused news reporter"
+
+tts:
+  providers: [edge-tts]
+  speed: 1.0
+  pitch_hz: 0
+  sentence_pause_ms: 280
+  edge_tts:
+    voice: en-GB-RyanNeural        # male British
+
+video:
+  aspect: landscape
+  height: 720
+  fps: 25
+  image_transition_seconds: 0.6
+  segment_pad_seconds: 0.5
+  zoom_amount: 0.12
+  crf: 20
+  preset: veryfast
+  brand:
+    name: Real Madrid Daily
+    primary_color: "#003DA5"
+    accent_color: "#FEBE10"
+    text_color: "#FFFFFF"
+    intro_title: "Real Madrid Daily"
+    outro_text: "Hala Madrid"
+
+export:
+  target_mb: 15.0
+  audio_kbps: 96
+  min_video_kbps: 350
+  max_video_kbps: 2500
+  preset: medium
+
+download:
+  download_dir: ""
