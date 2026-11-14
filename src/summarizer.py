@@ -50,7 +50,6 @@ class ClaudeClient:
         body = {
             "model": self.model,
             "max_tokens": max_tokens or self.max_tokens,
-            "temperature": self.temperature,
             "system": system,
             "messages": [{"role": "user", "content": user}],
         }

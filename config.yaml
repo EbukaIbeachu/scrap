@@ -11,7 +11,7 @@ general:
   max_claude_calls_per_run: 20  # safety cap on paid AI calls per run
 
 claude:
-  model: claude-3-5-haiku-latest  # cheap and fast; switch to a bigger model for better scripts
+  model: claude-haiku-5-5  # cheap and fast; switch to a bigger model for better scripts
   max_tokens: 4000
   temperature: 0.3
 
@@ -93,7 +93,7 @@ script:
 
 # ---- Voice ------------------------------------------------------------------------------------
 tts:
-  providers: [own_voice]        # tried in this order; the first that works is used
+  providers: [edge-tts]         # tried in this order; the first that works is used
   speed: 1.0                    # 0.9 = slower, 1.1 = faster
   pitch_hz: 0                   # edge-tts only, e.g. -10 for deeper
   sentence_pause_ms: 280
