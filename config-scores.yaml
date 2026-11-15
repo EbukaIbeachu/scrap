@@ -217,6 +217,19 @@ selection:
     - injury
     - squad news
     - press conference
+    # Women's football — handled by config-female-scores.yaml
+    - WSL
+    - Women's Super League
+    - NWSL
+    - Women's Champions League
+    - UWCL
+    - Lionesses
+    - Matildas
+    - USWNT
+    - Women's World Cup
+    - FIFAWWC
+    - women's
+    - women
 
 images:
   image_mode: auto
