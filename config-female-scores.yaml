@@ -216,7 +216,7 @@ video:
   zoom_amount: 0.08
   crf: 20
   preset: veryfast
-  music_dir: data-female-scores/music   # drop an MP3 here before running
+  music_dir: music                       # relative to data_dir (data-female-scores/music)
   music_volume: 0.85
   brand:
     name: Female Scores
