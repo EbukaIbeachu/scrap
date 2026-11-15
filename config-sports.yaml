@@ -27,6 +27,37 @@ outlets:
   - name: BBC Sport Football
     rss_url: https://feeds.bbci.co.uk/sport/football/rss.xml
     enabled: true
+  - name: BBC Champions League
+    rss_url: https://www.bbc.co.uk/sport/football/champions-league/rss.xml
+    enabled: true
+  - name: BBC European Football
+    rss_url: https://feeds.bbci.co.uk/sport/football/european/rss.xml
+    enabled: true
+  - name: BBC Premier League
+    rss_url: https://feeds.bbci.co.uk/sport/football/premier-league/rss.xml
+    enabled: true
+  - name: BBC Transfers
+    rss_url: https://feeds.bbci.co.uk/sport/football/transfers/rss.xml
+    enabled: true
+  - name: BBC Arsenal
+    rss_url: https://feeds.bbci.co.uk/sport/football/teams/arsenal/rss.xml
+    enabled: true
+  - name: BBC Manchester City
+    rss_url: https://feeds.bbci.co.uk/sport/football/teams/manchester-city/rss.xml
+    enabled: true
+  - name: BBC Liverpool
+    rss_url: https://feeds.bbci.co.uk/sport/football/teams/liverpool/rss.xml
+    enabled: true
+  - name: BBC Chelsea
+    rss_url: https://feeds.bbci.co.uk/sport/football/teams/chelsea/rss.xml
+    enabled: true
+  - name: BBC Barcelona
+    rss_url: https://feeds.bbci.co.uk/sport/football/teams/barcelona/rss.xml
+    enabled: true
+  - name: BBC Atletico Madrid
+    rss_url: https://feeds.bbci.co.uk/sport/football/teams/atletico-madrid/rss.xml
+    enabled: true
+  # Proxy-blocked outlets — set enabled: true if your network allows them
   - name: Marca English
     rss_url: https://www.marca.com/en/rss/football/real-madrid.xml
     enabled: false
@@ -35,6 +66,15 @@ outlets:
     enabled: false
   - name: Sky Sports Football
     rss_url: https://www.skysports.com/rss/12040
+    enabled: false
+  - name: ESPN Soccer
+    rss_url: https://www.espn.com/espn/rss/soccer/news
+    enabled: false
+  - name: Goal.com
+    rss_url: https://www.goal.com/feeds/en/news
+    enabled: false
+  - name: 90min
+    rss_url: https://www.90min.com/feed
     enabled: false
 
 news_apis:
