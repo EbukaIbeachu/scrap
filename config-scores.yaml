@@ -103,23 +103,45 @@ selection:
     - aggregate
     - second leg
     - first leg
-    # Competitions
+    - highlights
+    - recap
+    # Competitions — Europe
     - Premier League
+    - EPL
     - Champions League
-    - La Liga
+    - UEFA Champions League
     - Europa League
-    - FA Cup
-    - Carabao Cup
+    - UEFA Europa League
+    - Conference League
+    - UEFA Conference League
+    - La Liga
+    - LaLiga
     - Serie A
     - Bundesliga
     - Ligue 1
-    - World Cup
-    - Euros
+    - Eredivisie
+    - Primeira Liga
+    - Scottish Premiership
+    # Competitions — International
+    - UEFA Nations League
     - Nations League
-    # Clubs
-    - Real Madrid
-    - Barcelona
-    - Atletico Madrid
+    - World Cup
+    - FIFA World Cup
+    - Euros
+    - European Championship
+    - Copa America
+    - AFCON
+    - Africa Cup of Nations
+    - Olympic football
+    # Domestic cups
+    - FA Cup
+    - Carabao Cup
+    - EFL Cup
+    - Copa del Rey
+    - DFB-Pokal
+    - Coppa Italia
+    - Coupe de France
+    # English clubs
     - Arsenal
     - Manchester City
     - Manchester United
@@ -128,13 +150,46 @@ selection:
     - Tottenham
     - Newcastle
     - Aston Villa
+    - West Ham
+    - Brighton
+    - Nottingham Forest
+    - Everton
+    - Fulham
+    - Brentford
+    - Crystal Palace
+    - Wolves
+    # Spanish clubs
+    - Real Madrid
+    - Barcelona
+    - Atletico Madrid
+    - Sevilla
+    - Real Sociedad
+    - Villarreal
+    - Athletic Bilbao
+    # German clubs
     - Bayern Munich
-    - PSG
+    - Borussia Dortmund
+    - Bayer Leverkusen
+    - RB Leipzig
+    # Italian clubs
     - Inter Milan
     - AC Milan
     - Juventus
-    - Borussia Dortmund
-    # Players scoring
+    - Napoli
+    - Roma
+    - Lazio
+    # French clubs
+    - PSG
+    - Paris Saint-Germain
+    - Monaco
+    - Marseille
+    # Other European
+    - Porto
+    - Benfica
+    - Ajax
+    - Celtic
+    - Rangers
+    # Players
     - Vinicius
     - Mbappe
     - Bellingham
@@ -145,6 +200,13 @@ selection:
     - Lewandowski
     - Ronaldo
     - Messi
+    - Yamal
+    - Pedri
+    - Foden
+    - Palmer
+    - Nunez
+    - Osimhen
+    - Lookman
   keywords_exclude:
     - transfer
     - signing
