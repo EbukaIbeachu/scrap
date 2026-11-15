@@ -22,6 +22,7 @@ import re
 import sys
 import urllib.request
 import urllib.error
+import urllib.parse
 import xml.etree.ElementTree as ET
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
@@ -98,6 +99,43 @@ def api_get(path: str, params: dict | None = None) -> dict:
         return json.loads(resp.read())
 
 
+_wiki_cache: dict[str, str] = {}
+
+def wikipedia_image(team_name: str) -> str:
+    """Fetch the main image URL for a Wikipedia page about a football team."""
+    if team_name in _wiki_cache:
+        return _wiki_cache[team_name]
+    try:
+        query = urllib.parse.quote(team_name + " national football team")
+        search_url = (
+            f"https://en.wikipedia.org/w/api.php?action=query&list=search"
+            f"&srsearch={query}&srlimit=1&format=json"
+        )
+        req = urllib.request.Request(search_url, headers={"User-Agent": "NewsHighlights/1.0"})
+        with urllib.request.urlopen(req, timeout=10) as resp:
+            results = json.loads(resp.read()).get("query", {}).get("search", [])
+        if not results:
+            _wiki_cache[team_name] = ""
+            return ""
+        title = urllib.parse.quote(results[0]["title"].replace(" ", "_"))
+        img_url = (
+            f"https://en.wikipedia.org/w/api.php?action=query&titles={title}"
+            f"&prop=pageimages&pithumbsize=1200&format=json"
+        )
+        req2 = urllib.request.Request(img_url, headers={"User-Agent": "NewsHighlights/1.0"})
+        with urllib.request.urlopen(req2, timeout=10) as resp2:
+            pages = json.loads(resp2.read()).get("query", {}).get("pages", {})
+        for page in pages.values():
+            thumb = page.get("thumbnail", {}).get("source", "")
+            if thumb:
+                _wiki_cache[team_name] = thumb
+                return thumb
+    except Exception:
+        pass
+    _wiki_cache[team_name] = ""
+    return ""
+
+
 def get_todays_fixtures(league_ids: list[int], date_str: str) -> list[dict]:
     """Fetch all finished fixtures for the given leagues on date_str."""
     fixtures = []
@@ -168,10 +206,13 @@ def format_story(fix: dict) -> dict:
         if pub_ts else datetime.now(timezone.utc).isoformat()
     )
 
-    # Try to get a team logo as an image
+    # Images: Wikipedia photos first (large, real photos), then team logos as fallback
+    home_wiki = wikipedia_image(home)
+    away_wiki = wikipedia_image(away)
     home_logo = teams.get("home", {}).get("logo", "")
     away_logo = teams.get("away", {}).get("logo", "")
-    image_urls = [u for u in [home_logo, away_logo] if u]
+    league_logo = league.get("logo", "")
+    image_urls = [u for u in [home_wiki, away_wiki, home_logo, away_logo, league_logo] if u]
 
     return {
         "outlet": f"{comp_line}",

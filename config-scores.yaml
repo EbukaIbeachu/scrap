@@ -24,6 +24,8 @@ claude:
   max_tokens: 4000
   temperature: 0.3
 
+# Scores come from api-football.com via fetch_scores.py (--skip-collect).
+# These RSS outlets are used as fallback if the API is unavailable.
 outlets:
   - name: BBC Sport Football
     rss_url: https://feeds.bbci.co.uk/sport/football/rss.xml
@@ -36,9 +38,6 @@ outlets:
     enabled: true
   - name: BBC European Football
     rss_url: https://feeds.bbci.co.uk/sport/football/european/rss.xml
-    enabled: true
-  - name: BBC La Liga
-    rss_url: https://feeds.bbci.co.uk/sport/football/la-liga/rss.xml
     enabled: true
   - name: BBC Sport Real Madrid
     rss_url: https://feeds.bbci.co.uk/sport/football/teams/real-madrid/rss.xml
@@ -54,9 +53,6 @@ outlets:
     enabled: true
   - name: BBC Manchester United
     rss_url: https://feeds.bbci.co.uk/sport/football/teams/manchester-united/rss.xml
-    enabled: true
-  - name: BBC Transfers
-    rss_url: https://feeds.bbci.co.uk/sport/football/transfers/rss.xml
     enabled: true
   - name: MadridXtra
     rss_url: https://madridxtra.com/rss.xml
@@ -226,10 +222,10 @@ selection:
 
 images:
   image_mode: auto
-  auto_order: [article, stock, cards]
-  images_per_story: 3             # more images per story for visual variety
-  min_width: 500
-  min_height: 300
+  auto_order: [article, cards]    # article = Wikipedia photos + team logos; cards as fallback
+  images_per_story: 2
+  min_width: 80                   # accept team badge logos (100x100) as fallback
+  min_height: 80
   monetization_safe: false
 
 people:
