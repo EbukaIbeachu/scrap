@@ -1,9 +1,13 @@
 # ============================================================
-# FEMALE FOOTBALL SCORES — Women's match results, music-only
-# Run: python main.py run-all --config config-female-scores.yaml -v --no-approve-prompt --no-download-prompt
+# FEMALE FOOTBALL SCORES — Women's full-time results, music-only
 #
-# MUSIC: Drop any MP3/M4A file into data-female-scores/music/ before running.
-#        The video will be music-only — no spoken voiceover.
+# Step 1 — Fetch only score articles into the DB:
+#   python fetch_scores.py --config config-female-scores.yaml
+#
+# Step 2 — Build the video (skip normal RSS collect):
+#   python main.py run-all --config config-female-scores.yaml --skip-collect -v --no-approve-prompt --no-download-prompt
+#
+# MUSIC: Drop any MP3/M4A into data-female-scores/music/ before running.
 # ============================================================
 
 general:

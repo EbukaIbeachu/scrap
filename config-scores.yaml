@@ -1,9 +1,13 @@
 # ============================================================
-# FOOTBALL SCORES — Match results, full-time scores, no voiceover
-# Run: python main.py run-all --config config-scores.yaml -v --no-approve-prompt --no-download-prompt
+# FOOTBALL SCORES — Full-time results only, music-only (no voiceover)
 #
-# MUSIC: Drop any MP3/M4A file into data-scores/music/ before running.
-#        The video will be music-only — no spoken voiceover.
+# Step 1 — Fetch only score articles into the DB:
+#   python fetch_scores.py --config config-scores.yaml
+#
+# Step 2 — Build the video (skip normal RSS collect):
+#   python main.py run-all --config config-scores.yaml --skip-collect -v --no-approve-prompt --no-download-prompt
+#
+# MUSIC: Drop any MP3/M4A into data-scores/music/ before running.
 # ============================================================
 
 general:
@@ -76,35 +80,24 @@ selection:
   max_per_outlet: 3
   prefer_full_text: true
   keywords_include:
-    # Match result signals
-    - full-time
-    - full time
-    - FT
-    - final score
-    - match result
+    # Score/result patterns — articles with these are actual FT results
     - match report
     - scorecard
-    - result
-    - goals
-    - scored
-    - winner
-    - draw
-    - victory
-    - defeat
+    - full-time
+    - full time
+    - final score
+    - FT
     - beaten
     - thrashed
     - comeback
     - hat-trick
     - brace
-    - penalty
     - stoppage time
-    - injury time
     - extra time
     - aggregate
     - second leg
     - first leg
     - highlights
-    - recap
     # Competitions — Europe
     - Premier League
     - EPL
