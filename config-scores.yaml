@@ -1,0 +1,217 @@
+# ============================================================
+# FOOTBALL SCORES — Match results, full-time scores, no voiceover
+# Run: python main.py run-all --config config-scores.yaml -v --no-approve-prompt --no-download-prompt
+#
+# MUSIC: Drop any MP3/M4A file into data-scores/music/ before running.
+#        The video will be music-only — no spoken voiceover.
+# ============================================================
+
+general:
+  language: en
+  timezone: Europe/London
+  user_agent: "NewsHighlightsPersonal/1.0 (personal, non-commercial use)"
+  request_delay_seconds: 2.0
+  request_timeout: 20
+  data_dir: data-scores
+  max_claude_calls_per_run: 20
+
+claude:
+  model: claude-haiku-5-5
+  max_tokens: 4000
+  temperature: 0.3
+
+outlets:
+  - name: BBC Sport Football
+    rss_url: https://feeds.bbci.co.uk/sport/football/rss.xml
+    enabled: true
+  - name: BBC Premier League
+    rss_url: https://feeds.bbci.co.uk/sport/football/premier-league/rss.xml
+    enabled: true
+  - name: BBC Champions League
+    rss_url: https://www.bbc.co.uk/sport/football/champions-league/rss.xml
+    enabled: true
+  - name: BBC European Football
+    rss_url: https://feeds.bbci.co.uk/sport/football/european/rss.xml
+    enabled: true
+  - name: BBC La Liga
+    rss_url: https://feeds.bbci.co.uk/sport/football/la-liga/rss.xml
+    enabled: true
+  - name: BBC Sport Real Madrid
+    rss_url: https://feeds.bbci.co.uk/sport/football/teams/real-madrid/rss.xml
+    enabled: true
+  - name: BBC Arsenal
+    rss_url: https://feeds.bbci.co.uk/sport/football/teams/arsenal/rss.xml
+    enabled: true
+  - name: BBC Liverpool
+    rss_url: https://feeds.bbci.co.uk/sport/football/teams/liverpool/rss.xml
+    enabled: true
+  - name: BBC Manchester City
+    rss_url: https://feeds.bbci.co.uk/sport/football/teams/manchester-city/rss.xml
+    enabled: true
+  - name: BBC Manchester United
+    rss_url: https://feeds.bbci.co.uk/sport/football/teams/manchester-united/rss.xml
+    enabled: true
+  - name: BBC Transfers
+    rss_url: https://feeds.bbci.co.uk/sport/football/transfers/rss.xml
+    enabled: true
+  - name: MadridXtra
+    rss_url: https://madridxtra.com/rss.xml
+    enabled: true
+
+news_apis:
+  - provider: gnews
+    enabled: false
+  - provider: newsdata
+    enabled: false
+
+collector:
+  max_stories_per_outlet: 15
+  min_article_chars: 200          # scores articles can be short
+  fetch_full_text: true
+  respect_robots: true
+  lookback_hours: 24              # only today's results
+
+selection:
+  top_n: 6
+  max_per_outlet: 3
+  prefer_full_text: true
+  keywords_include:
+    # Match result signals
+    - full-time
+    - full time
+    - FT
+    - final score
+    - match result
+    - match report
+    - scorecard
+    - result
+    - goals
+    - scored
+    - winner
+    - draw
+    - victory
+    - defeat
+    - beaten
+    - thrashed
+    - comeback
+    - hat-trick
+    - brace
+    - penalty
+    - stoppage time
+    - injury time
+    - extra time
+    - aggregate
+    - second leg
+    - first leg
+    # Competitions
+    - Premier League
+    - Champions League
+    - La Liga
+    - Europa League
+    - FA Cup
+    - Carabao Cup
+    - Serie A
+    - Bundesliga
+    - Ligue 1
+    - World Cup
+    - Euros
+    - Nations League
+    # Clubs
+    - Real Madrid
+    - Barcelona
+    - Atletico Madrid
+    - Arsenal
+    - Manchester City
+    - Manchester United
+    - Liverpool
+    - Chelsea
+    - Tottenham
+    - Newcastle
+    - Aston Villa
+    - Bayern Munich
+    - PSG
+    - Inter Milan
+    - AC Milan
+    - Juventus
+    - Borussia Dortmund
+    # Players scoring
+    - Vinicius
+    - Mbappe
+    - Bellingham
+    - Salah
+    - Haaland
+    - Saka
+    - Kane
+    - Lewandowski
+    - Ronaldo
+    - Messi
+  keywords_exclude:
+    - transfer
+    - signing
+    - loan
+    - contract
+    - pre-match
+    - preview
+    - injury
+    - squad news
+    - press conference
+
+images:
+  image_mode: auto
+  auto_order: [article, stock, cards]
+  images_per_story: 3             # more images per story for visual variety
+  min_width: 500
+  min_height: 300
+  monetization_safe: false
+
+people:
+  enabled: true
+  max_per_story: 2
+  require_approval: false
+  auto_use_min_confidence: 0.85
+  manual_photos_dir: people_photos
+  wikipedia_lang: en
+  search_api:
+    enabled: false
+
+script:
+  words_per_story: 60             # short — just the score and key facts
+  intro_words: 15
+  outro_words: 10
+  tone: "concise football scores bulletin — state the teams, the final score, and one key moment only"
+
+# ---- NO VOICEOVER: uses silent mock provider, music fills the audio ----
+tts:
+  providers: [mock]               # generates silence — music plays instead
+  speed: 1.0
+  pitch_hz: 0
+  sentence_pause_ms: 400          # slightly longer pauses for readability
+
+video:
+  aspect: landscape
+  height: 720
+  fps: 25
+  image_transition_seconds: 0.8
+  segment_pad_seconds: 0.8        # a little extra time on each slide
+  zoom_amount: 0.08
+  crf: 20
+  preset: veryfast
+  music_dir: data-scores/music    # drop an MP3 here before running
+  music_volume: 0.85              # high — music is the only audio
+  brand:
+    name: Football Scores
+    primary_color: "#1D3461"      # deep navy
+    accent_color: "#F5A623"       # golden amber
+    text_color: "#FFFFFF"
+    intro_title: "Football Scores"
+    outro_text: "Full Time"
+
+export:
+  target_mb: 15.0
+  audio_kbps: 128
+  min_video_kbps: 350
+  max_video_kbps: 2500
+  preset: medium
+
+download:
+  download_dir: ""
