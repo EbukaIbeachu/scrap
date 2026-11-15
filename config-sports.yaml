@@ -198,11 +198,11 @@ video:
   crf: 20
   preset: veryfast
   brand:
-    name: Real Madrid Daily
+    name: Sports Daily
     primary_color: "#003DA5"
     accent_color: "#FEBE10"
     text_color: "#FFFFFF"
-    intro_title: "Real Madrid Daily"
+    intro_title: "Sports Daily"
     outro_text: "Hala Madrid"
 
 export:
