@@ -1,167 +1,258 @@
 #!/usr/bin/env python3
 """
-Fetch only full-time score articles from BBC Sport RSS feeds and inject
-them into the pipeline DB for a scores config.
+Fetch today's full-time football scores from api-football.com (v3)
+and inject them into the pipeline DB.
+
+The API key is injected automatically by the proxy — no env variable needed.
 
 Usage:
     python fetch_scores.py --config config-scores.yaml
     python fetch_scores.py --config config-female-scores.yaml
-    # Then run the pipeline skipping collect:
-    python main.py run-all --config config-scores.yaml --skip-collect --no-approve-prompt --no-download-prompt
+
+Then build the video:
+    python main.py run-all --config config-scores.yaml --skip-collect -v --no-approve-prompt --no-download-prompt
 """
 from __future__ import annotations
 
 import argparse
-import re
+import json
 import sys
 import urllib.request
-import xml.etree.ElementTree as ET
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timezone
 from pathlib import Path
 
 import yaml
 
-# Score patterns in BBC Sport article titles
-# e.g. "Arsenal 3-1 Chelsea", "Real Madrid 2–0 Barcelona", "Man City 4-0 Wolves"
-SCORE_RE = re.compile(r'\b\d{1,2}[-–]\d{1,2}\b')
+API_BASE = "https://v3.football.api-sports.io"
 
-# Phrases that confirm it's a result (not a preview)
-RESULT_WORDS = {
-    "match report", "scorecard", "highlights", "result", "beaten",
-    "thrashed", "beat ", "wins ", "win ", "draws", "drew", "defeat",
-    "victory", "comeback", "hat-trick", "brace", "full time", "full-time",
-    "aggregate", "second leg", "first leg",
-}
+# League IDs to fetch — covers all major competitions
+# Men's leagues
+MEN_LEAGUE_IDS = [
+    2,    # UEFA Champions League
+    3,    # UEFA Europa League
+    848,  # UEFA Conference League
+    4,    # UEFA Euro (European Championship)
+    5,    # UEFA Nations League
+    6,    # FIFA World Cup
+    39,   # Premier League (England)
+    40,   # Championship (England)
+    61,   # Ligue 1 (France)
+    62,   # Ligue 2 (France)
+    71,   # Série A (Brazil)
+    78,   # Bundesliga (Germany)
+    79,   # 2. Bundesliga (Germany)
+    88,   # Eredivisie (Netherlands)
+    94,   # Primeira Liga (Portugal)
+    106,  # Ekstraklasa (Poland)
+    119,  # Superliga (Denmark)
+    135,  # Serie A (Italy)
+    136,  # Serie B (Italy)
+    140,  # La Liga (Spain)
+    141,  # La Liga 2 (Spain)
+    143,  # Copa del Rey (Spain)
+    197,  # Super League (Greece)
+    203,  # Süper Lig (Turkey)
+    207,  # Super League (Switzerland)
+    218,  # Bundesliga (Austria)
+    235,  # Premier League (Russia)
+    253,  # Major League Soccer (USA)
+    262,  # Liga MX (Mexico)
+    307,  # Saudi Pro League
+    351,  # AFC Champions League
+]
 
-PROXY = None  # picked up from env automatically by urllib
-
-
-def has_score(title: str, description: str = "") -> bool:
-    """Return True if the title contains a score pattern."""
-    return bool(SCORE_RE.search(title))
-
-
-def is_result(title: str, description: str = "") -> bool:
-    """Return True if the article is about a completed match."""
-    combined = (title + " " + description).lower()
-    return has_score(title) or any(w in combined for w in RESULT_WORDS)
-
-
-def fetch_feed(url: str, timeout: int = 20) -> list[dict]:
-    """Fetch an RSS feed and return items as dicts."""
-    try:
-        req = urllib.request.Request(url, headers={"User-Agent": "NewsHighlightsPersonal/1.0"})
-        with urllib.request.urlopen(req, timeout=timeout) as resp:
-            xml_bytes = resp.read()
-    except Exception as exc:
-        print(f"  WARN: could not fetch {url}: {exc}", file=sys.stderr)
-        return []
-
-    try:
-        root = ET.fromstring(xml_bytes)
-    except ET.ParseError as exc:
-        print(f"  WARN: bad XML from {url}: {exc}", file=sys.stderr)
-        return []
-
-    ns = {"dc": "http://purl.org/dc/elements/1.1/"}
-    items = []
-    for item in root.iter("item"):
-        def t(tag: str) -> str:
-            el = item.find(tag)
-            return (el.text or "").strip() if el is not None else ""
-
-        pub_raw = t("pubDate")
-        try:
-            from email.utils import parsedate_to_datetime
-            pub_dt = parsedate_to_datetime(pub_raw).astimezone(timezone.utc)
-            pub_iso = pub_dt.isoformat()
-        except Exception:
-            pub_iso = datetime.now(timezone.utc).isoformat()
-
-        items.append({
-            "url": t("link") or t("guid"),
-            "title": t("title"),
-            "summary": re.sub(r'<[^>]+>', '', t("description")),
-            "published": pub_iso,
-        })
-    return items
+# Women's leagues
+WOMEN_LEAGUE_IDS = [
+    754,  # UEFA Women's Champions League
+    755,  # FIFA Women's World Cup
+    756,  # UEFA Women's Euro
+    757,  # Women's Super League (England)
+    758,  # D1 Arkema (France)
+    760,  # Frauen-Bundesliga (Germany)
+    761,  # Primera Iberdrola (Spain)
+    762,  # Serie A Femminile (Italy)
+    763,  # NWSL (USA)
+]
 
 
-def load_config(path: str) -> dict:
-    with open(path) as f:
-        return yaml.safe_load(f)
+def api_get(path: str, params: dict | None = None) -> dict:
+    """Call the API — key is injected by the proxy."""
+    url = f"{API_BASE}/{path.lstrip('/')}"
+    if params:
+        qs = "&".join(f"{k}={v}" for k, v in params.items())
+        url = f"{url}?{qs}"
+    req = urllib.request.Request(
+        url,
+        headers={
+            "x-apisports-key": "proxy-injected",
+            "Accept": "application/json",
+        }
+    )
+    with urllib.request.urlopen(req, timeout=20) as resp:
+        return json.loads(resp.read())
+
+
+def get_todays_fixtures(league_ids: list[int], date_str: str) -> list[dict]:
+    """Fetch all finished fixtures for the given leagues on date_str."""
+    fixtures = []
+    # Batch by date — one call gets all leagues for that day
+    data = api_get("fixtures", {"date": date_str, "status": "FT-AET-PEN"})
+    if data.get("errors"):
+        err = data["errors"]
+        raise RuntimeError(f"API error: {err}")
+    for fix in data.get("response", []):
+        lid = fix.get("league", {}).get("id")
+        if lid in league_ids:
+            fixtures.append(fix)
+    return fixtures
+
+
+def format_story(fix: dict) -> dict:
+    """Turn a fixture response object into a pipeline story dict."""
+    league = fix.get("league", {})
+    teams = fix.get("teams", {})
+    goals = fix.get("goals", {})
+    score = fix.get("score", {})
+    fixture_info = fix.get("fixture", {})
+
+    home = teams.get("home", {}).get("name", "?")
+    away = teams.get("away", {}).get("name", "?")
+    home_goals = goals.get("home", 0) or 0
+    away_goals = goals.get("away", 0) or 0
+    competition = league.get("name", "Football")
+    country = league.get("country", "")
+    round_name = league.get("round", "")
+    fixture_id = fixture_info.get("id", 0)
+
+    score_str = f"{home_goals}-{away_goals}"
+    if home_goals > away_goals:
+        result_line = f"{home} beat {away} {score_str}"
+    elif away_goals > home_goals:
+        result_line = f"{away} beat {home} {away_goals}-{home_goals}"
+    else:
+        result_line = f"{home} and {away} drew {score_str}"
+
+    # Check for extra time / penalties
+    ft_status = fixture_info.get("status", {}).get("short", "FT")
+    if ft_status == "AET":
+        result_line += " (after extra time)"
+    elif ft_status == "PEN":
+        pen = score.get("penalty", {})
+        result_line += f" (penalties: {home} {pen.get('home','?')}-{pen.get('away','?')} {away})"
+
+    comp_line = f"{competition}"
+    if country and country not in competition:
+        comp_line = f"{country} {competition}"
+    if round_name:
+        comp_line += f" — {round_name}"
+
+    title = f"{home} {score_str} {away}"
+    text = (
+        f"{result_line}. "
+        f"{comp_line}. "
+        f"Final score: {home} {score_str} {away}."
+    )
+
+    # Build a unique stable URL from fixture ID
+    url = f"https://v3.football.api-sports.io/fixtures?id={fixture_id}"
+
+    pub_ts = fixture_info.get("timestamp")
+    pub_iso = (
+        datetime.fromtimestamp(pub_ts, tz=timezone.utc).isoformat()
+        if pub_ts else datetime.now(timezone.utc).isoformat()
+    )
+
+    # Try to get a team logo as an image
+    home_logo = teams.get("home", {}).get("logo", "")
+    away_logo = teams.get("away", {}).get("logo", "")
+    image_urls = [u for u in [home_logo, away_logo] if u]
+
+    return {
+        "outlet": f"{comp_line}",
+        "url": url,
+        "title": title,
+        "summary": text,
+        "text": text,
+        "text_quality": "full",
+        "published": pub_iso,
+        "image_urls": image_urls,
+    }
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Inject full-time scores into the pipeline DB")
+    parser = argparse.ArgumentParser()
     parser.add_argument("--config", default="config-scores.yaml")
+    parser.add_argument("--date", default=None, help="YYYY-MM-DD (default: today)")
+    parser.add_argument("--women", action="store_true", help="fetch women's leagues instead")
     args = parser.parse_args()
 
-    cfg = load_config(args.config)
-    data_dir = Path(cfg["general"]["data_dir"])
-    lookback_hours = int(cfg.get("collector", {}).get("lookback_hours", 24))
-    since = datetime.now(timezone.utc) - timedelta(hours=lookback_hours)
+    with open(args.config) as f:
+        cfg = yaml.safe_load(f)
 
-    # Import pipeline DB (requires being run from project root)
+    data_dir = Path(cfg["general"]["data_dir"])
+    date_str = args.date or datetime.now(timezone.utc).strftime("%Y-%m-%d")
+
+    # Pick league list based on config name or --women flag
+    is_women = args.women or "female" in args.config.lower() or "women" in args.config.lower()
+    league_ids = set(WOMEN_LEAGUE_IDS if is_women else MEN_LEAGUE_IDS)
+
+    print(f"Fetching {'women' if is_women else 'men'}'s FT scores for {date_str}...")
+
+    # Test API key
+    try:
+        status = api_get("status")
+        if status.get("errors"):
+            print(f"ERROR: API key problem: {status['errors']}", file=sys.stderr)
+            sys.exit(1)
+        acct = status.get("response", {}).get("account", {})
+        sub = status.get("response", {}).get("subscription", {})
+        requests_info = status.get("response", {}).get("requests", {})
+        print(f"  API account: {acct.get('firstname','')} {acct.get('lastname','')} "
+              f"| Plan: {sub.get('plan','?')} "
+              f"| Requests today: {requests_info.get('current','?')}/{requests_info.get('limit_day','?')}")
+    except Exception as exc:
+        print(f"ERROR: Could not reach API: {exc}", file=sys.stderr)
+        sys.exit(1)
+
+    # Fetch fixtures
+    try:
+        fixtures = get_todays_fixtures(list(league_ids), date_str)
+    except Exception as exc:
+        print(f"ERROR fetching fixtures: {exc}", file=sys.stderr)
+        sys.exit(1)
+
+    print(f"  Found {len(fixtures)} finished fixtures")
+
+    if not fixtures:
+        print("No finished fixtures today — nothing injected.")
+        return
+
+    # Import pipeline DB
     sys.path.insert(0, str(Path(__file__).parent))
     from src.db import Database
 
     db = Database(data_dir / "news.db")
 
-    outlets = [o for o in cfg.get("outlets", []) if o.get("enabled")]
-    print(f"Fetching scores from {len(outlets)} feeds (last {lookback_hours}h)...")
+    injected = 0
+    for fix in fixtures:
+        story = format_story(fix)
+        story_id = db.add_story(
+            outlet=story["outlet"],
+            url=story["url"],
+            title=story["title"],
+            summary=story["summary"],
+            text=story["text"],
+            text_quality=story["text_quality"],
+            published=story["published"],
+            image_urls=story["image_urls"],
+        )
+        if story_id is not None:
+            injected += 1
+            print(f"  + {story['title']}")
 
-    total_injected = 0
-    for outlet in outlets:
-        name = outlet["name"]
-        url = outlet["rss_url"]
-        print(f"  → {name}")
-        items = fetch_feed(url)
-        injected = 0
-        for item in items:
-            # Only within lookback window
-            try:
-                pub = datetime.fromisoformat(item["published"])
-                if pub.tzinfo is None:
-                    pub = pub.replace(tzinfo=timezone.utc)
-                if pub < since:
-                    continue
-            except Exception:
-                pass
-
-            title = item["title"]
-            summary = item["summary"]
-
-            # Only keep articles that are actual match results with a score
-            if not is_result(title, summary):
-                continue
-
-            # Build a clean text that leads with the score/result facts
-            score_match = SCORE_RE.search(title)
-            if score_match:
-                score = score_match.group(0)
-                text = f"{title}. Final score: {score}. {summary}".strip()
-            else:
-                text = f"{title}. {summary}".strip()
-
-            story_id = db.add_story(
-                outlet=name,
-                url=item["url"],
-                title=title,
-                summary=summary,
-                text=text,
-                text_quality="full",
-                published=item["published"],
-            )
-            if story_id is not None:
-                injected += 1
-                print(f"      + {title[:80]}")
-
-        total_injected += injected
-
-    print(f"\nInjected {total_injected} score articles into {data_dir}/news.db")
-    print("Now run:")
-    print(f"  python main.py run-all --config {args.config} --skip-collect --no-approve-prompt --no-download-prompt")
+    print(f"\nInjected {injected} score fixtures into {data_dir}/news.db")
+    print(f"\nNow run:")
+    print(f"  python main.py run-all --config {args.config} --skip-collect -v --no-approve-prompt --no-download-prompt")
 
 
 if __name__ == "__main__":
