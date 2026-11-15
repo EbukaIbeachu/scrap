@@ -57,6 +57,33 @@ outlets:
   - name: BBC Atletico Madrid
     rss_url: https://feeds.bbci.co.uk/sport/football/teams/atletico-madrid/rss.xml
     enabled: true
+  - name: BBC Man United
+    rss_url: https://feeds.bbci.co.uk/sport/football/teams/manchester-united/rss.xml
+    enabled: true
+  - name: BBC Tottenham
+    rss_url: https://feeds.bbci.co.uk/sport/football/teams/tottenham-hotspur/rss.xml
+    enabled: true
+  - name: BBC Newcastle
+    rss_url: https://feeds.bbci.co.uk/sport/football/teams/newcastle-united/rss.xml
+    enabled: true
+  - name: BBC Aston Villa
+    rss_url: https://feeds.bbci.co.uk/sport/football/teams/aston-villa/rss.xml
+    enabled: true
+  - name: BBC West Ham
+    rss_url: https://feeds.bbci.co.uk/sport/football/teams/west-ham-united/rss.xml
+    enabled: true
+  - name: BBC Formula 1
+    rss_url: https://feeds.bbci.co.uk/sport/formula1/rss.xml
+    enabled: true
+  - name: BBC Tennis
+    rss_url: https://feeds.bbci.co.uk/sport/tennis/rss.xml
+    enabled: true
+  - name: BBC Boxing
+    rss_url: https://feeds.bbci.co.uk/sport/boxing/rss.xml
+    enabled: true
+  - name: BBC Cricket
+    rss_url: https://feeds.bbci.co.uk/sport/cricket/rss.xml
+    enabled: true
   # Proxy-blocked outlets — set enabled: true if your network allows them
   - name: Marca English
     rss_url: https://www.marca.com/en/rss/football/real-madrid.xml
@@ -141,6 +168,90 @@ selection:
     - signing
     - loan
     - contract
+    # More EPL teams
+    - Newcastle
+    - Aston Villa
+    - West Ham
+    - Brighton
+    - Nottingham Forest
+    - Everton
+    - Fulham
+    - Brentford
+    # More EPL players
+    - Salah
+    - Haaland
+    - De Bruyne
+    - Saka
+    - Odegaard
+    - Martinelli
+    - Nunez
+    - Palmer
+    - Son
+    - Kane
+    - Rashford
+    - Fernandes
+    - Isak
+    - Watkins
+    # More La Liga / European
+    - Yamal
+    - Pedri
+    - Gavi
+    - Foden
+    - Europa League
+    - FA Cup
+    - Carabao Cup
+    - Bundesliga
+    - Serie A
+    - Ligue 1
+    - Erling Haaland
+    - Kylian Mbappe
+    # Match events
+    - hat trick
+    - red card
+    - penalty
+    - VAR
+    - offside
+    - fixture
+    - league table
+    - standings
+    - manager sacked
+    - press conference
+    # Formula 1
+    - Formula 1
+    - F1
+    - Grand Prix
+    - Hamilton
+    - Verstappen
+    - Leclerc
+    - Norris
+    - Sainz
+    - Alonso
+    - Ferrari
+    - Red Bull Racing
+    - McLaren
+    - Mercedes F1
+    - pole position
+    - podium
+    # Tennis
+    - Djokovic
+    - Alcaraz
+    - Sinner
+    - Swiatek
+    - Medvedev
+    - Wimbledon
+    - Roland Garros
+    - US Open tennis
+    - Australian Open
+    - ATP
+    - WTA
+    - Grand Slam
+    # Boxing
+    - Anthony Joshua
+    - Fury
+    - Usyk
+    - world champion
+    - title fight
+    - knockout
   keywords_exclude:
     - oil
     - gas

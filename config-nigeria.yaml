@@ -88,6 +88,14 @@ outlets:
     rss_url: https://techpoint.africa/feed/
     enabled: false
 
+  - name: Al Jazeera Africa
+    rss_url: https://www.aljazeera.com/xml/rss/all.xml
+    enabled: true
+
+  - name: VOA Africa
+    rss_url: https://www.voanews.com/api/zqki-iqeyii
+    enabled: false
+
 news_apis:
   - provider: gnews
     enabled: false
@@ -349,6 +357,120 @@ selection:
     - Nigeria Olympics
     - Team Nigeria
 
+    # ---- Banking & financial institutions ----
+    - Zenith Bank
+    - GTBank
+    - GTCO
+    - Access Bank
+    - First Bank
+    - UBA
+    - Fidelity Bank
+    - Stanbic IBTC
+    - Sterling Bank
+    - Wema Bank
+    - Polaris Bank
+    - Heritage Bank
+    - Unity Bank
+    - ecobank
+    - Citibank Nigeria
+    - SEC Nigeria
+    - NSE
+    - NGX
+    - stock market
+    - capital market
+    - pension
+    - PenCom
+
+    # ---- Entertainment & culture ----
+    - Nollywood
+    - Afrobeats
+    - Burna Boy
+    - Wizkid
+    - Davido
+    - Rema
+    - Asake
+    - Ayra Starr
+    - Tiwa Savage
+    - Olamide
+    - AMVCA
+    - Africa Magic
+    - AFRIMA
+    - Grammy
+    - Netflix Nigeria
+    - Prime Video Nigeria
+
+    # ---- States & cities ----
+    - Kano
+    - Kaduna
+    - Enugu
+    - Port Harcourt
+    - Rivers State
+    - Delta State
+    - Ogun
+    - Oyo
+    - Imo
+    - Abia
+    - Anambra
+    - Cross River
+    - Akwa Ibom
+    - Edo
+    - Kwara
+    - Nassarawa
+    - Plateau
+    - Taraba
+    - Adamawa
+    - Gombe
+    - Bauchi
+    - Kebbi
+    - Sokoto
+    - Zamfara
+    - Bayelsa
+    - Benin City
+    - Owerri
+    - Makurdi
+    - Warri
+    - Calabar
+    - Ibadan
+    - Abeokuta
+    - Ilorin
+
+    # ---- Judiciary ----
+    - Chief Justice
+    - Supreme Court
+    - NJC
+    - AGF
+    - Attorney General
+    - SAN
+    - NBA
+    - court ruling
+    - judgment
+    - injunction
+    - contempt
+
+    # ---- Religion & traditional rulers ----
+    - CAN
+    - PFN
+    - JNI
+    - Sultan of Sokoto
+    - Archbishop
+    - Bishop
+    - Pastor
+    - Ooni of Ife
+    - Oba of Benin
+    - Emir
+    - traditional ruler
+
+    # ---- Domestic football ----
+    - NPFL
+    - Enyimba
+    - Rangers International
+    - Shooting Stars
+    - Kano Pillars
+    - Heartland
+    - Falconets
+    - Flying Eagles
+    - U-23 Eagles
+
     # ---- Diaspora & international ----
     - Nigerians abroad
     - diaspora
@@ -360,6 +482,9 @@ selection:
     - China Nigeria
     - African Union
     - ECOWAS
+    - AFCFTA
+    - bilateral
+    - diplomatic
 
 images:
   image_mode: auto

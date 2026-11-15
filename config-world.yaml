@@ -33,6 +33,24 @@ outlets:
   - name: BBC News Health
     rss_url: https://feeds.bbci.co.uk/news/health/rss.xml
     enabled: true
+  - name: BBC News Middle East
+    rss_url: https://feeds.bbci.co.uk/news/world/middle_east/rss.xml
+    enabled: true
+  - name: BBC News Asia
+    rss_url: https://feeds.bbci.co.uk/news/world/asia/rss.xml
+    enabled: true
+  - name: BBC News Europe
+    rss_url: https://feeds.bbci.co.uk/news/world/europe/rss.xml
+    enabled: true
+  - name: BBC News Americas
+    rss_url: https://feeds.bbci.co.uk/news/world/us_and_canada/rss.xml
+    enabled: true
+  - name: BBC News Africa
+    rss_url: https://feeds.bbci.co.uk/news/world/africa/rss.xml
+    enabled: true
+  - name: BBC News Politics
+    rss_url: https://feeds.bbci.co.uk/news/politics/rss.xml
+    enabled: true
 
 news_apis:
   - provider: gnews
@@ -118,6 +136,105 @@ selection:
     - OPEC
     - tariff
     - sanctions
+    # Russia / Ukraine
+    - Russia
+    - Ukraine
+    - Putin
+    - Zelensky
+    - war
+    - ceasefire
+    - peace talks
+    - NATO expansion
+    # China / Taiwan
+    - China
+    - Xi Jinping
+    - Taiwan
+    - Taiwan Strait
+    - South China Sea
+    - Beijing
+    - Communist Party
+    # Middle East
+    - Israel
+    - Gaza
+    - Palestine
+    - Hamas
+    - West Bank
+    - Netanyahu
+    - Iran
+    - nuclear deal
+    - Hezbollah
+    - Lebanon
+    - Syria
+    - Yemen
+    - Saudi Arabia
+    - MBS
+    # Asia
+    - India
+    - Modi
+    - Pakistan
+    - Bangladesh
+    - North Korea
+    - Kim Jong Un
+    - South Korea
+    # Europe
+    - EU
+    - European Union
+    - Brexit
+    - Macron
+    - Scholz
+    - Ursula von der Leyen
+    # Big Tech
+    - OpenAI
+    - ChatGPT
+    - Google
+    - Apple
+    - Meta
+    - Microsoft
+    - Tesla
+    - Elon Musk
+    - Nvidia
+    - Amazon
+    - regulation
+    - antitrust
+    - deepfake
+    - Silicon Valley
+    # Economy
+    - recession
+    - stagflation
+    - housing crisis
+    - cost of living
+    - food prices
+    - supply chain
+    - Federal Reserve
+    - ECB
+    - Bank of England
+    - interest rates
+    - bond yield
+    # More Africa
+    - ECOWAS
+    - Sahel
+    - Sudan
+    - DRC
+    - Congo
+    - Somalia
+    - Ethiopia
+    - Mozambique
+    - Zimbabwe
+    - Senegal
+    - Mali
+    - Niger coup
+    - Burkina Faso
+    # Climate
+    - COP
+    - net zero
+    - carbon
+    - emissions
+    - fossil fuels
+    - renewable energy
+    - solar
+    - flooding
+    - drought
+    - wildfire
   keywords_exclude:
     # Sports (keep world and sports separate)
     - Premier League
