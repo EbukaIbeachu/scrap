@@ -9,7 +9,8 @@ __pycache__/
 .pytest_cache/
 
 # Data & outputs (personal content, never commit)
-# everything under data/ is personal or generated: the scraped news.db, article images,
+# everything under data*/ is personal or generated: the scraped news.db, article images,
 # voice samples, generated audio/output, and the ~1.9 GB XTTS model in data/models/
 data/
+data-*/
 logs/

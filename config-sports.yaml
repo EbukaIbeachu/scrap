@@ -27,6 +27,64 @@ outlets:
   - name: BBC Sport Football
     rss_url: https://feeds.bbci.co.uk/sport/football/rss.xml
     enabled: true
+  - name: BBC Champions League
+    rss_url: https://www.bbc.co.uk/sport/football/champions-league/rss.xml
+    enabled: true
+  - name: BBC European Football
+    rss_url: https://feeds.bbci.co.uk/sport/football/european/rss.xml
+    enabled: true
+  - name: BBC Premier League
+    rss_url: https://feeds.bbci.co.uk/sport/football/premier-league/rss.xml
+    enabled: true
+  - name: BBC Transfers
+    rss_url: https://feeds.bbci.co.uk/sport/football/transfers/rss.xml
+    enabled: true
+  - name: BBC Arsenal
+    rss_url: https://feeds.bbci.co.uk/sport/football/teams/arsenal/rss.xml
+    enabled: true
+  - name: BBC Manchester City
+    rss_url: https://feeds.bbci.co.uk/sport/football/teams/manchester-city/rss.xml
+    enabled: true
+  - name: BBC Liverpool
+    rss_url: https://feeds.bbci.co.uk/sport/football/teams/liverpool/rss.xml
+    enabled: true
+  - name: BBC Chelsea
+    rss_url: https://feeds.bbci.co.uk/sport/football/teams/chelsea/rss.xml
+    enabled: true
+  - name: BBC Barcelona
+    rss_url: https://feeds.bbci.co.uk/sport/football/teams/barcelona/rss.xml
+    enabled: true
+  - name: BBC Atletico Madrid
+    rss_url: https://feeds.bbci.co.uk/sport/football/teams/atletico-madrid/rss.xml
+    enabled: true
+  - name: BBC Man United
+    rss_url: https://feeds.bbci.co.uk/sport/football/teams/manchester-united/rss.xml
+    enabled: true
+  - name: BBC Tottenham
+    rss_url: https://feeds.bbci.co.uk/sport/football/teams/tottenham-hotspur/rss.xml
+    enabled: true
+  - name: BBC Newcastle
+    rss_url: https://feeds.bbci.co.uk/sport/football/teams/newcastle-united/rss.xml
+    enabled: true
+  - name: BBC Aston Villa
+    rss_url: https://feeds.bbci.co.uk/sport/football/teams/aston-villa/rss.xml
+    enabled: true
+  - name: BBC West Ham
+    rss_url: https://feeds.bbci.co.uk/sport/football/teams/west-ham-united/rss.xml
+    enabled: true
+  - name: BBC Formula 1
+    rss_url: https://feeds.bbci.co.uk/sport/formula1/rss.xml
+    enabled: true
+  - name: BBC Tennis
+    rss_url: https://feeds.bbci.co.uk/sport/tennis/rss.xml
+    enabled: true
+  - name: BBC Boxing
+    rss_url: https://feeds.bbci.co.uk/sport/boxing/rss.xml
+    enabled: true
+  - name: BBC Cricket
+    rss_url: https://feeds.bbci.co.uk/sport/cricket/rss.xml
+    enabled: true
+  # Proxy-blocked outlets — set enabled: true if your network allows them
   - name: Marca English
     rss_url: https://www.marca.com/en/rss/football/real-madrid.xml
     enabled: false
@@ -35,6 +93,15 @@ outlets:
     enabled: false
   - name: Sky Sports Football
     rss_url: https://www.skysports.com/rss/12040
+    enabled: false
+  - name: ESPN Soccer
+    rss_url: https://www.espn.com/espn/rss/soccer/news
+    enabled: false
+  - name: Goal.com
+    rss_url: https://www.goal.com/feeds/en/news
+    enabled: false
+  - name: 90min
+    rss_url: https://www.90min.com/feed
     enabled: false
 
 news_apis:
@@ -101,6 +168,90 @@ selection:
     - signing
     - loan
     - contract
+    # More EPL teams
+    - Newcastle
+    - Aston Villa
+    - West Ham
+    - Brighton
+    - Nottingham Forest
+    - Everton
+    - Fulham
+    - Brentford
+    # More EPL players
+    - Salah
+    - Haaland
+    - De Bruyne
+    - Saka
+    - Odegaard
+    - Martinelli
+    - Nunez
+    - Palmer
+    - Son
+    - Kane
+    - Rashford
+    - Fernandes
+    - Isak
+    - Watkins
+    # More La Liga / European
+    - Yamal
+    - Pedri
+    - Gavi
+    - Foden
+    - Europa League
+    - FA Cup
+    - Carabao Cup
+    - Bundesliga
+    - Serie A
+    - Ligue 1
+    - Erling Haaland
+    - Kylian Mbappe
+    # Match events
+    - hat trick
+    - red card
+    - penalty
+    - VAR
+    - offside
+    - fixture
+    - league table
+    - standings
+    - manager sacked
+    - press conference
+    # Formula 1
+    - Formula 1
+    - F1
+    - Grand Prix
+    - Hamilton
+    - Verstappen
+    - Leclerc
+    - Norris
+    - Sainz
+    - Alonso
+    - Ferrari
+    - Red Bull Racing
+    - McLaren
+    - Mercedes F1
+    - pole position
+    - podium
+    # Tennis
+    - Djokovic
+    - Alcaraz
+    - Sinner
+    - Swiatek
+    - Medvedev
+    - Wimbledon
+    - Roland Garros
+    - US Open tennis
+    - Australian Open
+    - ATP
+    - WTA
+    - Grand Slam
+    # Boxing
+    - Anthony Joshua
+    - Fury
+    - Usyk
+    - world champion
+    - title fight
+    - knockout
   keywords_exclude:
     - oil
     - gas
@@ -158,11 +309,11 @@ video:
   crf: 20
   preset: veryfast
   brand:
-    name: Real Madrid Daily
+    name: Sports Daily
     primary_color: "#003DA5"
     accent_color: "#FEBE10"
     text_color: "#FFFFFF"
-    intro_title: "Real Madrid Daily"
+    intro_title: "Sports Daily"
     outro_text: "Hala Madrid"
 
 export:

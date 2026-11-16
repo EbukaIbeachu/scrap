@@ -1,0 +1,237 @@
+# ============================================================
+# FEMALE FOOTBALL SCORES — Women's full-time results, music-only
+#
+# Step 1 — Fetch only score articles into the DB:
+#   python fetch_scores.py --config config-female-scores.yaml
+#
+# Step 2 — Build the video (skip normal RSS collect):
+#   python main.py run-all --config config-female-scores.yaml --skip-collect -v --no-approve-prompt --no-download-prompt
+#
+# MUSIC: Drop any MP3/M4A into data-female-scores/music/ before running.
+# ============================================================
+
+general:
+  language: en
+  timezone: Europe/London
+  user_agent: "NewsHighlightsPersonal/1.0 (personal, non-commercial use)"
+  request_delay_seconds: 2.0
+  request_timeout: 20
+  data_dir: data-female-scores
+  max_claude_calls_per_run: 20
+
+claude:
+  model: claude-haiku-5-5
+  max_tokens: 4000
+  temperature: 0.3
+
+outlets:
+  - name: BBC Sport Football
+    rss_url: https://feeds.bbci.co.uk/sport/football/rss.xml
+    enabled: true
+  - name: BBC Women's Super League
+    rss_url: https://feeds.bbci.co.uk/sport/football/womens-super-league/rss.xml
+    enabled: true
+  - name: BBC Women's Football
+    rss_url: https://feeds.bbci.co.uk/sport/football/womens/rss.xml
+    enabled: true
+  - name: BBC Champions League
+    rss_url: https://www.bbc.co.uk/sport/football/champions-league/rss.xml
+    enabled: true
+  - name: BBC European Football
+    rss_url: https://feeds.bbci.co.uk/sport/football/european/rss.xml
+    enabled: true
+  - name: BBC Arsenal Women
+    rss_url: https://feeds.bbci.co.uk/sport/football/teams/arsenal-women/rss.xml
+    enabled: true
+  - name: BBC Chelsea Women
+    rss_url: https://feeds.bbci.co.uk/sport/football/teams/chelsea-women/rss.xml
+    enabled: true
+  - name: BBC Man City Women
+    rss_url: https://feeds.bbci.co.uk/sport/football/teams/manchester-city-women/rss.xml
+    enabled: true
+  - name: BBC Man United Women
+    rss_url: https://feeds.bbci.co.uk/sport/football/teams/manchester-united-women/rss.xml
+    enabled: true
+
+news_apis:
+  - provider: gnews
+    enabled: false
+  - provider: newsdata
+    enabled: false
+
+collector:
+  max_stories_per_outlet: 15
+  min_article_chars: 200
+  fetch_full_text: true
+  respect_robots: true
+  lookback_hours: 24
+
+selection:
+  top_n: 6
+  max_per_outlet: 3
+  prefer_full_text: true
+  keywords_include:
+    # Women's football signals
+    - women
+    - women's
+    - WSL
+    - Women's Super League
+    - NWSL
+    - FAWSL
+    - UWCL
+    - Women's Champions League
+    - Women's World Cup
+    - FIFAWWC
+    - Women's Euros
+    - Women's Nations League
+    - Lionesses
+    - Matildas
+    - USWNT
+    - Algarve Cup
+    - SheBelieves Cup
+    # Match result signals
+    - full-time
+    - full time
+    - FT
+    - final score
+    - match result
+    - match report
+    - scorecard
+    - result
+    - goals
+    - scored
+    - winner
+    - draw
+    - victory
+    - defeat
+    - beaten
+    - comeback
+    - hat-trick
+    - brace
+    - penalty
+    - extra time
+    - aggregate
+    - second leg
+    - highlights
+    # WSL clubs
+    - Arsenal Women
+    - Chelsea Women
+    - Manchester City Women
+    - Manchester United Women
+    - Liverpool Women
+    - Aston Villa Women
+    - Tottenham Women
+    - West Ham Women
+    - Brighton Women
+    - Everton Women
+    - Leicester City Women
+    - Crystal Palace Women
+    - Bristol City Women
+    # International clubs
+    - Barcelona Femeni
+    - Lyon Women
+    - Olympique Lyonnais Feminine
+    - PSG Women
+    - Real Madrid Femenino
+    - Wolfsburg Women
+    - Bayern Munich Women
+    - Chelsea women
+    - Portland Thorns
+    - Kansas City Current
+    # Key players
+    - Kerr
+    - Sam Kerr
+    - Harder
+    - Putellas
+    - Bonmati
+    - Bronze
+    - Mead
+    - Hemp
+    - Russo
+    - Ella Toone
+    - Keira Walsh
+    - Martens
+    - Morgan
+    - Alex Morgan
+    - Rapinoe
+    - Horan
+    - Miyazawa
+    - Oshoala
+  keywords_exclude:
+    - transfer
+    - signing
+    - loan
+    - contract
+    - pre-match
+    - preview
+    - injury
+    - squad news
+    - press conference
+    # Keep men's football out
+    - Premier League
+    - La Liga
+    - Serie A
+    - Bundesliga
+    - Ligue 1
+    - Champions League men
+    - Europa League
+
+images:
+  image_mode: auto
+  auto_order: [article, stock, cards]
+  images_per_story: 3
+  min_width: 500
+  min_height: 300
+  monetization_safe: false
+
+people:
+  enabled: true
+  max_per_story: 2
+  require_approval: false
+  auto_use_min_confidence: 0.85
+  manual_photos_dir: people_photos
+  wikipedia_lang: en
+  search_api:
+    enabled: false
+
+script:
+  words_per_story: 60
+  intro_words: 15
+  outro_words: 10
+  tone: "concise women's football scores bulletin — state the teams, the final score, and one key moment only"
+
+# ---- NO VOICEOVER: uses silent mock provider, music fills the audio ----
+tts:
+  providers: [mock]
+  speed: 1.0
+  pitch_hz: 0
+  sentence_pause_ms: 400
+
+video:
+  aspect: landscape
+  height: 720
+  fps: 25
+  image_transition_seconds: 0.8
+  segment_pad_seconds: 0.8
+  zoom_amount: 0.08
+  crf: 20
+  preset: veryfast
+  music_dir: music                       # relative to data_dir (data-female-scores/music)
+  music_volume: 0.85
+  brand:
+    name: Female Scores
+    primary_color: "#8B1A5A"            # deep magenta/purple
+    accent_color: "#F5C6E0"            # soft pink
+    text_color: "#FFFFFF"
+    intro_title: "Female Scores"
+    outro_text: "Full Time"
+
+export:
+  target_mb: 15.0
+  audio_kbps: 128
+  min_video_kbps: 350
+  max_video_kbps: 2500
+  preset: medium
+
+download:
+  download_dir: ""
